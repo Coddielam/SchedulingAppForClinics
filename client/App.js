@@ -1,15 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Button,
-  ScrollView,
-  FlatList,
-  SectionList,
-} from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Agenda } from "react-native-calendars";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -94,6 +85,8 @@ export default function App() {
   let [createConsultation, setCreateConsultation] = useState(false);
   // clinic id coming from useEffect...
   let [user, setUser] = useState({});
+  // for displaying any messages
+  let [msg, setMsg] = useState("");
 
   // fetch consultation records associated with the clinic on mount
   useEffect(() => {
@@ -103,6 +96,7 @@ export default function App() {
       },
     };
     isAuthenticated &&
+      user !== {} &&
       (async () => {
         try {
           const res = await axios.get(
@@ -125,6 +119,7 @@ export default function App() {
         setToken={setToken}
         setUser={setUser}
         setIsAuthenticated={setIsAuthenticated}
+        setMsg={setMsg}
       />
     ) : (
       <Login
@@ -132,12 +127,16 @@ export default function App() {
         setToken={setToken}
         setIsAuthenticated={setIsAuthenticated}
         setUser={setUser}
+        setMsg={setMsg}
       />
     )
   ) : !createConsultation ? (
     <>
       <TouchableOpacity
-        style={styles.navbar}
+        style={{
+          ...styles.navbar,
+          backgroundColor: msg === "" ? "dodgerblue" : "#5F9EA0",
+        }}
         onPress={() => {
           setCreateConsultation(!createConsultation);
         }}
@@ -145,7 +144,7 @@ export default function App() {
         <Text
           style={{ ...styles.mediumFont, fontSize: 25, color: "whitesmoke" }}
         >
-          Add Consultation
+          {msg === "" ? "Add Consultation" : msg}
         </Text>
       </TouchableOpacity>
       <Agenda
@@ -167,8 +166,10 @@ export default function App() {
     </>
   ) : (
     <AddConsultationForm
+      token={token}
       clin_id={user.id}
       setCreateConsultation={setCreateConsultation}
+      setMsg={setMsg}
     />
   );
 }
@@ -179,7 +180,6 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "dodgerblue",
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,

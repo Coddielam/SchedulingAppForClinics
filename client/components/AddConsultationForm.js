@@ -11,25 +11,28 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const AddConsultationForm = ({ clin_id, setCreateConsultation }) => {
+const AddConsultationForm = ({
+  clin_id,
+  setCreateConsultation,
+  token,
+  setMsg,
+}) => {
   const [formData, setFormData] = useState({
-    clinic_id: clin_id,
     doctor_name: "",
     patient_name: "",
     diagnosis: "",
     medication: "",
     consultation_fee: "",
-    // datetime:"",
+
     has_followup: false,
   });
   const {
-    clinic_id,
     doctor_name,
     patient_name,
     diagnosis,
     medication,
     consultation_fee,
-    // datetime,
+
     has_followup,
   } = formData;
 
@@ -49,17 +52,18 @@ const AddConsultationForm = ({ clin_id, setCreateConsultation }) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
+        "x-auth-token": token,
       },
     };
 
     const body = JSON.stringify({
-      clinic_id,
+      clinic_id: clin_id,
       doctor_name,
       patient_name,
       diagnosis,
       medication,
       consultation_fee,
-      datetime: date.toISOString().replace(/T/, " ").replace(/\..+/, ""), // YYYY-MM-DD hh:mm:ss
+      datetime: date.toLocaleString("sv-SE"), // YYYY-MM-DD hh:mm:ss
       has_followup,
     });
 
@@ -70,7 +74,10 @@ const AddConsultationForm = ({ clin_id, setCreateConsultation }) => {
           body,
           config
         );
-        //****************************** comes back with objec with msg key
+        setMsg("Appointment Added");
+        setTimeout(() => {
+          setMsg("");
+        }, 2000);
         setCreateConsultation(false); // back to Agenda...
       } catch (err) {
         return setErrors(err.response.data.errors);

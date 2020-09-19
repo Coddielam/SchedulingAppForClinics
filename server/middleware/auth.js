@@ -8,9 +8,9 @@ module.exports = (req, res, next) => {
   try {
     const decrypted = jwt.verify(token, config.get("jwtSecret"));
     req.user = decrypted;
+
     next();
   } catch (err) {
-    console.log("From auth middleware: invalid token");
     return res.status(400).json({ msg: "Invalid token" });
   }
 };

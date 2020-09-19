@@ -50,7 +50,10 @@ router.post(
       user.password = await bcrypt.hash(password, saltRound);
 
       await db.createClinicAcct(user);
+
       user = await db.getUser(email);
+
+      user = user[0];
 
       // sign and send back jwt
       const payload = {
@@ -58,6 +61,7 @@ router.post(
           email: user.email,
         },
       };
+
       jwt.sign(
         payload,
         config.get("jwtSecret"),

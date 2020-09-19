@@ -12,7 +12,13 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const Login = ({ setNeedRegister, setToken, setIsAuthenticated, setUser }) => {
+const Login = ({
+  setNeedRegister,
+  setToken,
+  setIsAuthenticated,
+  setUser,
+  setMsg,
+}) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -39,6 +45,10 @@ const Login = ({ setNeedRegister, setToken, setIsAuthenticated, setUser }) => {
         setToken(res.data.token);
         setUser(res.data.user);
         setIsAuthenticated(true);
+        setMsg("Login Successful");
+        setTimeout(() => {
+          setMsg("");
+        }, 2000);
       } catch (err) {
         setErrors(err.response.data.errors);
         setToken("");

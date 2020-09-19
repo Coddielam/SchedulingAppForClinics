@@ -15,6 +15,7 @@ const Registration = ({
   setToken,
   setIsAuthenticated,
   setUser,
+  setMsg,
 }) => {
   const [formData, setFormData] = useState({
     email: "",
@@ -62,9 +63,14 @@ const Registration = ({
           body,
           config
         );
+
         setToken(res.data.token);
         setUser(res.data.user);
         setIsAuthenticated(true);
+        setMsg("Account Created! Welcome!");
+        setTimeout(() => {
+          setMsg("");
+        }, 2000);
       } catch (err) {
         setErrors(err.response.data.errors);
         setToken("");

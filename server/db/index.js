@@ -94,7 +94,6 @@ mediconcendb.createClinicAcct = (info) => {
         return reject(err);
       }
       resolve(resolve);
-      console.log("1 clinic account has been created...");
     });
   });
 };
@@ -108,7 +107,6 @@ mediconcendb.createConsultation = (consultation_record) => {
         return reject(err);
       }
       resolve(result);
-      return console.log("1 consultation record has been inserted...");
     });
   });
 };

@@ -5,10 +5,13 @@ const auth = require("../middleware/auth");
 
 const router = express.Router();
 
-// Create consultations
+// @route   POST /api/consultations
+// @desc    Create consultation record
+// @access  Private
 router.post(
   "/",
   [
+    auth,
     check("clinic_id", "Clinic ID's field is required").not().isEmpty(),
     check("doctor_name", "Doctor's name is required").not().isEmpty(),
     check("patient_name", "Patient's name is required").not().isEmpty(),
@@ -21,12 +24,11 @@ router.post(
     // validation errors handling
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log(errors);
+      console.error(errors);
       return res.status(400).json({ errors: errors.array() });
     }
 
     try {
-      console.log(req.body);
       await db.createConsultation(req.body);
       res.json({ msg: "Consultation Created" });
     } catch (err) {
@@ -42,19 +44,6 @@ router.post(
 router.get("/", auth, async (req, res) => {
   try {
     let result = await db.getAllConsultRecords(req.user.user.email);
-    res.json(result);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
-  }
-});
-
-// @route   /api/consultations:consultation_id
-// @desc    Get single consultation record info i.e. doctor_name, patient_name etc.
-// @access  Private
-router.get("/:consultation_id", async (req, res) => {
-  try {
-    let result = await db.getConsultRecords(req.params.consultation_id);
     res.json(result);
   } catch (err) {
     console.error(err);
