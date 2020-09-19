@@ -54,6 +54,8 @@ router.post(
       user = await db.getUser(email);
 
       user = user[0];
+      
+      delete user["password"];
 
       // sign and send back jwt
       const payload = {
@@ -117,6 +119,9 @@ router.post(
           email: user.email,
         },
       };
+      
+      delete user["password"];
+      
 
       jwt.sign(
         payload,
