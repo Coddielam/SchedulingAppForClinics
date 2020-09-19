@@ -1,0 +1,5 @@
+{
+  "sql_user": "root",
+  "sql_password": "Abm20089!",
+  "jwtSecret": "mediconcen"
+}
